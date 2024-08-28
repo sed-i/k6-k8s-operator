@@ -5,23 +5,24 @@
 """Charm the application."""
 
 import logging
+import os
 
-import ops
+from ops.jujucontext import _JujuContext as Context
+from ops.model import _ModelBackend as HookTools
+
 
 logger = logging.getLogger(__name__)
 
 
-class K6K8SCharm(ops.CharmBase):
-    """Charm the application."""
+context = Context.from_dict(os.environ)
+tool = HookTools()
 
-    def __init__(self, framework: ops.Framework):
-        super().__init__(framework)
-        framework.observe(self.on["some_container"].pebble_ready, self._on_pebble_ready)
 
-    def _on_pebble_ready(self, event: ops.PebbleReadyEvent):
-        """Handle pebble-ready event."""
-        self.unit.status = ops.ActiveStatus()
+def common_exit_hook():
+    print(context)
+    tool.status_set("active", "")
 
 
 if __name__ == "__main__":  # pragma: nocover
-    ops.main(K6K8SCharm)  # type: ignore
+    common_exit_hook()
+

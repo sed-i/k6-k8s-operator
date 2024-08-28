@@ -1,1 +1,1 @@
-ops ~= 2.8
+ops @ git+https://github.com/canonical/operator@main
