@@ -30,6 +30,7 @@ description: |
 
 # (Required for 'charm' type)
 bases:
+  # Charm code relies on py3.10 features so need ubuntu>=22.04
   - build-on:
     - name: ubuntu
       channel: "22.04"
@@ -47,6 +48,11 @@ config:
   options:
 
 
+actions:
+  run:
+    params:
+      testname:
+        type: string
 
 # The containers and resources metadata apply to Kubernetes charms only.
 # See https://juju.is/docs/sdk/metadata-reference for a checklist and guidance.
@@ -68,6 +74,13 @@ resources:
     # so the integration testing suite knows which image to deploy during testing. This field
     # is also used by the 'canonical/charming-actions' Github action for automated releasing.
     upstream-source: grafana/k6:0.53.0
+
+requires:
+  k6:
+    description: |
+      The other side of the relation is the server (hence provider),
+      so must be the requirer here.
+    interface: k6
 
 parts:
   charm:
